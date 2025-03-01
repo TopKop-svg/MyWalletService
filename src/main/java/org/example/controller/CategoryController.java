@@ -25,4 +25,26 @@ public class CategoryController {
         Category savedCategory = categoryRepository.save(category);
         return ResponseEntity.ok(savedCategory);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Category> updateCategory(@PathVariable Long id,
+                                                   @RequestBody Category categoryDetails) {
+        return categoryRepository.findById(id)
+                .map(category -> {
+                    category.setName(categoryDetails.getName());
+                    Category updatedCategory = categoryRepository.save(category);
+                    return ResponseEntity.ok(updatedCategory);
+                })
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
+        return categoryRepository.findById(id)
+                .map(category -> {
+                    categoryRepository.delete(category);
+                    return ResponseEntity.ok().<Void>build();
+                })
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
 }

@@ -1,4 +1,4 @@
-package model;
+package org.example.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -18,3 +18,4 @@ public class Category {
     @Column(name = "name", nullable = false, unique = true)
     private String name;
 }
+

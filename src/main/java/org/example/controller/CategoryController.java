@@ -28,9 +28,7 @@ public class CategoryController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Category> updateCategory(@PathVariable Long id,
-                                                   @Valid
-                                                   @RequestBody Category categoryDetails) {
+    public ResponseEntity<Category> updateCategory(@PathVariable Long id, @Valid @RequestBody Category categoryDetails) {
         return categoryRepository.findById(id)
                 .map(category -> {
                     category.setName(categoryDetails.getName());

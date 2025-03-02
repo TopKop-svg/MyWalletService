@@ -1,5 +1,6 @@
 package org.example.controller;
 
+import jakarta.validation.Valid;
 import org.example.model.Transaction;
 import org.example.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,13 +21,14 @@ public class TransactionController {
     }
 
     @PostMapping
-    public ResponseEntity<Transaction> createTransactions(@RequestBody Transaction transaction) {
+    public ResponseEntity<Transaction> createTransactions(@Valid @RequestBody Transaction transaction) {
         Transaction savedTransaction = transactionRepository.save(transaction);
         return ResponseEntity.ok(savedTransaction);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Transaction> updateTransaction(@PathVariable Long id,
+                                                         @Valid
                                                          @RequestBody Transaction transactionDetails) {
         return transactionRepository.findById(id)
                 .map(transaction -> {
@@ -40,7 +42,7 @@ public class TransactionController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTransaction(@PathVariable Long id) {
         return transactionRepository.findById(id)
                 .map(transaction -> {

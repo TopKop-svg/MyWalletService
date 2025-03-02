@@ -1,5 +1,6 @@
 package org.example.controller;
 
+import jakarta.validation.Valid;
 import org.example.model.Category;
 import org.example.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,13 +22,14 @@ public class CategoryController {
     }
 
     @PostMapping
-    public ResponseEntity<Category> createCategory(@RequestBody Category category) {
+    public ResponseEntity<Category> createCategory(@Valid @RequestBody Category category) {
         Category savedCategory = categoryRepository.save(category);
         return ResponseEntity.ok(savedCategory);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Category> updateCategory(@PathVariable Long id,
+                                                   @Valid
                                                    @RequestBody Category categoryDetails) {
         return categoryRepository.findById(id)
                 .map(category -> {

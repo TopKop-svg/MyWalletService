@@ -3,6 +3,7 @@ package org.example.controller;
 import jakarta.validation.Valid;
 import org.example.model.Transaction;
 import org.example.repository.TransactionRepository;
+import org.example.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,8 @@ import java.util.List;
 public class TransactionController {
     @Autowired
     private TransactionRepository transactionRepository;
+    @Autowired
+    private TransactionService transactionService;
 
     @GetMapping
     public List<Transaction> getAllTransactions() {
@@ -30,25 +33,15 @@ public class TransactionController {
     public ResponseEntity<Transaction> updateTransaction(@PathVariable Long id,
                                                          @Valid
                                                          @RequestBody Transaction transactionDetails) {
-        return transactionRepository.findById(id)
-                .map(transaction -> {
-                    transaction.setAmount(transactionDetails.getAmount());
-                    transaction.setDate(transactionDetails.getDate());
-                    transaction.setCategory(transactionDetails.getCategory());
-                    transaction.setDescription(transaction.getDescription());
-                    Transaction updateTransaction = transactionRepository.save(transaction);
-                    return ResponseEntity.ok(updateTransaction);
-                })
+        return transactionService.updateTransaction(id, transactionDetails)
+                .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTransaction(@PathVariable Long id) {
-        return transactionRepository.findById(id)
-                .map(transaction -> {
-                    transactionRepository.delete(transaction);
-                return ResponseEntity.ok().<Void>build();
-                })
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        return transactionService.deleteTransaction(id)
+                ? ResponseEntity.ok().build()
+                : ResponseEntity.notFound().build();
     }
 }

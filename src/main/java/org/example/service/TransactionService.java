@@ -1,10 +1,13 @@
 package org.example.service;
 
 import org.example.model.Transaction;
+import org.example.repository.CategoryRepository;
 import org.example.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,10 +15,13 @@ import java.util.Optional;
 public class TransactionService {
 
     private final TransactionRepository transactionRepository;
+    private final CategoryRepository categoryRepository;
 
     @Autowired
-    public TransactionService(TransactionRepository transactionRepository) {
+    public TransactionService(TransactionRepository transactionRepository,
+                              CategoryRepository categoryRepository) {
         this.transactionRepository = transactionRepository;
+        this.categoryRepository = categoryRepository;
     }
 
     public List<Transaction> getAllTransactions() {
@@ -44,6 +50,10 @@ public class TransactionService {
                     return true;
                 })
                 .orElse(false);
+    }
+
+    public List<Transaction> importTransactionsFromCsv(MultipartFile file) throws Exception {
+        List<Transaction> transactions = new ArrayList<>();
     }
 
 }

@@ -3,6 +3,7 @@ package org.example.controller;
 import jakarta.validation.Valid;
 import org.example.model.Category;
 import org.example.repository.CategoryRepository;
+import org.example.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +16,8 @@ public class CategoryController {
 
     @Autowired
     private CategoryRepository categoryRepository;
+    @Autowired
+    private CategoryService categoryService;
 
     @GetMapping
     public List<Category> getAllCategories() {
@@ -29,22 +32,15 @@ public class CategoryController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Category> updateCategory(@PathVariable Long id, @Valid @RequestBody Category categoryDetails) {
-        return categoryRepository.findById(id)
-                .map(category -> {
-                    category.setName(categoryDetails.getName());
-                    Category updatedCategory = categoryRepository.save(category);
-                    return ResponseEntity.ok(updatedCategory);
-                })
+        return categoryService.updateCategory(id, categoryDetails)
+                .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
-        return categoryRepository.findById(id)
-                .map(category -> {
-                    categoryRepository.delete(category);
-                    return ResponseEntity.ok().<Void>build();
-                })
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        return categoryService.deleteCategory(id)
+                ? ResponseEntity.ok().build()
+                : ResponseEntity.notFound().build();
     }
 }

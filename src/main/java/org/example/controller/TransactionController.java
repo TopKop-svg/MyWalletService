@@ -7,6 +7,7 @@ import org.example.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -43,5 +44,15 @@ public class TransactionController {
         return transactionService.deleteTransaction(id)
                 ? ResponseEntity.ok().build()
                 : ResponseEntity.notFound().build();
+    }
+
+    @PostMapping("/import")
+    public ResponseEntity<List<Transaction>> importTransactions(@RequestParam("file")MultipartFile file) {
+        try {
+            List<Transaction> importedTransactions = transactionService.importTransactionsFromCsv(file);
+            return ResponseEntity.ok(importedTransactions);
+        } catch (Exception ex) {
+            return ResponseEntity.badRequest().body(null);
+        }
     }
 }

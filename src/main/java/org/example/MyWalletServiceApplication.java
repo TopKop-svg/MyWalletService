@@ -29,16 +29,7 @@ public class MyWalletServiceApplication implements CommandLineRunner {
 
     @Override
     public void run(String...args) throws Exception {
-        Category food = new Category();
-        food.setName("Food");
-        categoryRepository.save(food);
 
-        Transaction transaction = new Transaction();
-        transaction.setAmount(50.0);
-        transaction.setDescription("Lunch");
-        transaction.setDate(LocalDate.now());
-        transaction.setCategory(food);
-        transactionRepository.save(transaction);
 
         System.out.println("Categories: " + categoryRepository.findAll());
         System.out.printf("Transactions: " + transactionRepository.findAll());
